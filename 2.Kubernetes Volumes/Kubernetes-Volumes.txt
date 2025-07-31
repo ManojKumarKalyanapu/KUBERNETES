@@ -1,0 +1,4 @@
+kubectl get pvc --> get all persistant volumes
+
+kubectl get configmap --> get all confimap 
+

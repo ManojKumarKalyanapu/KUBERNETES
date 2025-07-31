@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels: # This label must match the selector in the service
+      app: users
+  template: # Template for the pods created by this deployment
+    metadata:
+      labels: # Labels for the pods, must match the selector in the service
+        app: users
+    spec:
+      containers:
+        - name: users # Main container for the users service
+          image: academind/kub-demo-users:latest
+          env: # Environment variables for the users service
+            - name: AUTH_ADDRESS
+              value: localhost
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+        - name: auth # Sidecar container for the auth service
+          image: academind/kub-demo-auth:latest
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"

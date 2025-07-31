@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+# Specifies the API version of Kubernetes being used to create the Deployment object.
+
+kind: Deployment
+# This tells Kubernetes you're creating a Deployment, which manages Pods and ReplicaSets.
+
+metadata:
+  name: second-app-deployment
+  # The name of the Deployment. This is how you'll refer to this Deployment in commands or configs.
+  labels:
+    group: example
+spec:
+  replicas: 1
+  # Specifies the number of Pod replicas you want running at all times.
+  # In this case, only one Pod will be running.
+
+  selector:
+    # The selector determines how the Deployment finds which Pods to manage.
+    # You're using 'matchExpressions' for more complex label matching.
+
+    # matchExpressions:
+    #   - { key: app, operator: In, values: [second-app, first-app] }
+    # This expression selects all Pods that have a label `app` with value either `second-app` or `first-app`.
+
+    # Alternatively, you could use simpler matching with 'matchLabels' like this:
+    matchLabels:
+      app: second-app
+      tier: backend
+
+  template:
+    # This is the Pod template. It describes how the Pods should be created.
+
+    metadata:
+      labels:
+        app: second-app
+        tier: backend
+        # Labels are added to the Pod. These must match the Deployment selector for it to manage the Pod.
+
+    spec:
+      containers:
+        - name: second-node
+          # Name of the container in the Pod.
+          image: manojkumarkalyanapu/kub-first-app:2 # The container image to use. This is the Docker image that will be run inside the Pod.
+          # You can specify a specific version of the image by replacing 'latest' with a version tag, like '3'.
+          imagePullPolicy: Always # This policy tells Kubernetes when to pull the container image .
+          # imagePullPolicy: Never
+          livenessProbe:
+            httpGet:
+              path: / # The path to check for liveness. This is the endpoint that Kubernetes will hit to check if the container is alive.
+              port: 8080 # The port on which the application is running inside the container.
+            periodSeconds: 10
+            # This checks the health of the container every 10 seconds.
+            initialDelaySeconds: 5
+            # This tells Kubernetes to wait 5 seconds before the first health check after the container starts
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          # Resource requests and limits for the container.
+          # Requests are the minimum resources required, and limits are the maximum resources allowed.

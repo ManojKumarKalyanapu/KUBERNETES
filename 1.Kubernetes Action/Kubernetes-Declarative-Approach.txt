@@ -1,0 +1,28 @@
+apiVersion : Which version of the Kubernetes API you're using to create this object
+kind - What kind of object you want to create
+metadata - Data that helps uniquely identify the object, including a name string, UID, and optional namespace
+spec - What state you desire for the object
+
+-- Deployment --
+
+kubectl apply -f <deployment-file-name>, <service-file-name> -> it can deployment or service file
+
+-- Updated deployment --
+
+change the yaml file and then
+
+kubectl apply -f <file-name> -> we get configured means updated file has been applied
+
+-- Delete Deployment --
+
+method 1 :
+
+kubectl delete <deployment-name>
+
+method 2 :
+
+kubectl delete -f <deployment-file-name>, -f<service-file-name>
+
+method 3 :
+
+kubectl delete <deployment>, <services> -l <key>:<value> -> delete the deployment and services which matches the label

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: story-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: story
+  template:
+    metadata:
+      labels:
+        app: story
+    spec:
+      containers:
+        - name: story
+          image: manojkumarkalyanapu/kub-data-demo:2
+          env:
+            - name: STORY_FOLDER
+              #   value: "story" # This is the environment variable that will be used in the app.js file to read the story folder
+              valueFrom: # This is how we can use the ConfigMap to set the environment variable
+                configMapKeyRef:
+                  name: data-store-env # This is the name of the ConfigMap we created
+                  key: folder # This is the key in the ConfigMap that we want to use as an environment variable
+          volumeMounts: # This is where we mount the volume to the container
+            - mountPath: /app/story
+              name: story-volume # This is where we mount the volume
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+      volumes: # This is where we define the volume
+        - name: story-volume # Name of the volume
+          # emptyDir: {}
+          # hostPath:
+          #   path: /data
+          #   type: DirectoryOrCreate # This will create the directory if it does not exist
+          persistentVolumeClaim: # This is where we use the Persistent Volume Claim
+            claimName: host-pvc # This is the name of the Persistent Volume Claim we created

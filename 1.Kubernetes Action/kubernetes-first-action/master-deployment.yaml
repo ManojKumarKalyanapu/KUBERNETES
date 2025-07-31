@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend # Name of the service, it can be anything
+spec:
+  selector: # This is used to identify the pods that are part of this service
+    app: second-app # Label to identify the pod it can app or anything else
+  ports:
+    - protocol: "TCP"
+      port: 80
+      targetPort: 8080
+    # - protocol: "TCP"
+    #   port: 443
+    #   targetPort: 8443
+  type: LoadBalancer
+
+# good practice if we keep service at first and then deployment
+# This is the deployment for the second application
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: second-app-deployment
+spec: # This is the specification of the deployment
+  replicas: 1 # Number of replicas of the pod to be created
+  selector: # This is used to identify the pods that are part of this deployment
+    # matchExpressions: are complex queries to select pods
+    # matchLabels: are simple queries to select pods
+    matchLabels:
+      app: second-app # Label to identify the pod it can app or anything else
+      tier: backend # Label to identify the tier of the pod, it can be frontend, backend, etc.
+  template: # This is the template for the pod that will be created
+    metadata: # Metadata for the pod
+      labels:
+        app: second-app # Label to identify the pod it can app or anything else
+        tier: backend # Label to identify the tier of the pod, it can be frontend, backend, etc.
+    spec: # Specification for the pod
+      containers: # List of containers that will be part of the pod
+        - name: second-node
+          image: manojkumarkalyanapu/kub-first-app:3
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"

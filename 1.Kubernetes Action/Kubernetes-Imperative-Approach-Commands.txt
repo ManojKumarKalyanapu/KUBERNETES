@@ -1,0 +1,52 @@
+kubectl help --> get long list of commands 
+
+kubectl create --> get long list of commands
+
+-- Implerative method deployments --
+
+kubectl create deployment <deployment-name> --image=<image-name>,<image-name2>,<image-name3> -> you can create multiple containers if we give mutiple image names
+
+kubectl get deployments --> get all list of deployments
+
+kubectl get pods --> get all list pods
+
+kubectl delete deployment <deployment-name> --> to delete deployment
+
+docker tag <image-name> <new-image-name> --> changing the image tag and name
+
+-- services --> there are used to expose pods ip which they contain a container running
+
+kubectl expose deployment <deployment-name> --type=LoadBalancer --port=<port-given-in-app>
+
+-- types --
+ClusterIP
+NodePort
+LoadBalancer
+
+kubectl get services --> get all list of services 
+
+kubectl delete service <service-name> --> to delete the service
+
+minikube service <service-name> --> get the service ip and open in brower 
+
+-- scale action --
+
+kubectl scale deployment/<deployment-name> --replicas=<number-of-replicas>
+
+-- updating deployments ---
+
+docker build -t <image-name>:<tag> --> first update the image if any changes done and give tag to get updated image, the tag should be like increment number
+
+docker push <image-name>:<tag>
+
+kubectl set image deployment/<deployment-name> <container-name>=<latest-image-name>:<tag> --> pull image form dockerhub and if the image not found or given a tag or name which is not it will not terminate the old pods if the latest created pod not running successfully 
+
+kubectl rollout status deployment/<deployment-name> --> to check the deployment is rollout(updated)
+
+kubectl rollout undo deployment/<deployment-name> --> if you want undo latest deployment which is we have got error or something it is not running successfully
+
+kubectl rollout history deployment/<deployment-name> --> check the all history of deployments
+
+kubectl rollout history deployment/<deployment-name> --revision=<image-tag> --> check all the history of deployment
+
+kubectl rollout undo deployment/<deployment-name> --to-revision=<image-tag> --> rollout based on tag of before 
