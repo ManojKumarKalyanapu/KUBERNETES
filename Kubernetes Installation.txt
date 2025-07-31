@@ -1,0 +1,11 @@
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1')) --> in power shell run has an administrator
+
+choco install kubernetes-cli --> run in command prompt has administrator
+
+choco install minikube --> run in command prompt has administrator
+
+minikube start --driver=docker --> run in command prompt has administrator
+
+minikube status
+
+minikube dashbaord
